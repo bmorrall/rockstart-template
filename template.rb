@@ -4,6 +4,22 @@ require 'bundler'
 require 'json'
 RAILS_REQUIREMENT = '~> 6.1.0'
 
+# require 'active_record/migration'
+require 'rails/generators/active_record/migration'
+
+module MigrationHelpers
+  # Implement the required interface for Rails::Generators::Migration.
+  def next_migration_number(_dirname)
+    @next_migration_number ||= Time.now.utc
+    @next_migration_number += 1
+    @next_migration_number.strftime('%Y%m%d%H%M%S')
+  end
+end
+
+extend Rails::Generators::Migration
+self.class.extend Rails::Generators::Migration::ClassMethods
+self.class.extend MigrationHelpers
+
 # Setup code copied from https://github.com/mattbrictson/rails-template
 
 def apply_template!
@@ -24,12 +40,16 @@ def apply_template!
 
   apply 'Rakefile.rb'
 
+  template 'env.test', '.env.test'
+
   add_rspec_install
   directory 'app'
   directory 'config'
   directory 'lib'
   directory 'spec'
+
   route "root to: 'pages#home'"
+  add_devise_routes
 
   git :init unless preexisting_git_repo?
   empty_directory '.git/safe'
@@ -38,7 +58,8 @@ def apply_template!
 
   run_with_clean_bundler_env 'bundle update'
   run_with_clean_bundler_env 'bin/rails webpacker:install'
-  create_database_and_initial_migration
+  create_database
+  migration_template 'db/migrate/devise_create_users.rb', 'db/migrate/devise_create_users.rb'
   run_with_clean_bundler_env 'bin/setup'
 
   binstubs = %w[brakeman bundler bundler-audit rspec-core rubocop]
@@ -146,11 +167,10 @@ def run_with_clean_bundler_env(cmd)
   exit(1)
 end
 
-def create_database_and_initial_migration
+def create_database
   return if Dir['db/migrate/**/*.rb'].any?
 
   run_with_clean_bundler_env 'bin/rails db:create'
-  run_with_clean_bundler_env 'bin/rails generate migration initial_migration'
 end
 
 def run_rubocop_autocorrections
@@ -164,6 +184,16 @@ end
 def add_rspec_install
   template 'rspec', '.rspec'
   directory 'spec'
+end
+
+def add_devise_routes
+  route <<~DEVISE
+    devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+    devise_scope :user do
+      get 'sign_in', :to => 'devise/sessions#new', :as => :new_user_session
+      delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
+    end
+  DEVISE
 end
 
 apply_template!

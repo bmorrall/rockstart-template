@@ -14,6 +14,8 @@ gem 'bootsnap'<%= gemfile_requirement('bootsnap') %>, require: false
 gem 'high_voltage'<%= gemfile_requirement('high_voltage') || ", '~> 3.1'" %>
 # Use Active Storage variant
 # gem 'image_processing'<%= gemfile_requirement('image_processing') %>
+# Sanitize IP Addresses
+gem 'ip_anonymizer'<%= gemfile_requirement('ip_anonymizer') %>
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'<%= gemfile_requirement('jbuilder') %>
 # Use postgresql as the database for Active Record
@@ -32,6 +34,12 @@ gem 'sass-rails', '>= 6'
 gem 'turbolinks'<%= gemfile_requirement('turbolinks') %>
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
 gem 'webpacker'<%= gemfile_requirement('webpacker') %>
+
+# Use devise and omniauth for authentication
+gem 'devise'<%= gemfile_requirement('devise') %>
+gem 'omniauth'<%= gemfile_requirement('omniauth') %>
+gem 'omniauth-auth0'<%= gemfile_requirement('omniauth-auth0') %>
+gem 'omniauth-rails_csrf_protection'<%= gemfile_requirement('omniauth-rails_csrf_protection') %>
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

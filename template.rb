@@ -39,6 +39,12 @@ def apply_template!
 
   template 'rubocop.yml.tt', '.rubocop.yml'
   run_rubocop_autocorrections
+
+  unless any_local_git_commits?
+    git checkout: '-b main'
+    git add: '-A .'
+    git commit: "-n -m 'Initial commit'"
+  end
 end
 
 def assert_minimum_rails_version
@@ -111,6 +117,10 @@ end
 def preexisting_git_repo?
   @preexisting_git_repo ||= (File.exist?('.git') || :nope)
   @preexisting_git_repo == true
+end
+
+def any_local_git_commits?
+  system('git log > /dev/null 2>&1')
 end
 
 def run_with_clean_bundler_env(cmd)

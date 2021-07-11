@@ -25,6 +25,9 @@
 /public/assets
 .byebug_history
 
+# Ignore dotenv files
+.env
+
 # Ignore test reports.
 /brakeman-output.*
 /coverage

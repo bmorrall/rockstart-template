@@ -3,6 +3,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '<%= RUBY_VERSION %>'
 
+# Use dotenv for config management
+gem 'dotenv-rails', groups: %i[development test]
+
 # Use Active Model has_secure_password
 # gem 'bcrypt'<%= gemfile_requirement('bcrypt') %>
 # Reduces boot times through caching; required in config/boot.rb

@@ -39,6 +39,8 @@ rails new blog
 
 #### These gems are added to the standard Rails stack
 
+* Configuration
+    * [dotenv][] – for local configuration
 * Utilities
     * [rubocop][] – enforces Ruby code style
 * Security

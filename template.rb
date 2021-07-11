@@ -12,6 +12,21 @@ def apply_template!
   assert_postgresql
 
   add_template_repository_to_source_path
+
+  # We're going to handle bundler and webpacker ourselves.
+  # Setting these options will prevent Rails from running them unnecessarily.
+  self.options = options.merge(
+    skip_bundle: true,
+    skip_webpack_install: true
+  )
+
+  template 'Gemfile.tt', force: true
+
+  git :init unless preexisting_git_repo?
+  empty_directory '.git/safe'
+
+  run_with_clean_bundler_env 'bundle update'
+  run_with_clean_bundler_env 'bin/rails webpacker:install'
 end
 
 def assert_minimum_rails_version
@@ -73,6 +88,37 @@ def add_template_repository_to_source_path
   else
     source_paths.unshift(File.dirname(__FILE__))
   end
+end
+
+def gemfile_requirement(name)
+  @original_gemfile ||= IO.read('Gemfile')
+  req = @original_gemfile[/gem\s+['"]#{name}['"]\s*(,[><~= \t\d.\w'"]*)?.*$/, 1]
+  req && req.gsub("'", %(")).strip.sub(/^,\s*"/, ', "')
+end
+
+def preexisting_git_repo?
+  @preexisting_git_repo ||= (File.exist?('.git') || :nope)
+  @preexisting_git_repo == true
+end
+
+def run_with_clean_bundler_env(cmd)
+  success = if defined?(Bundler)
+              if Bundler.respond_to?(:with_unbundled_env)
+                Bundler.with_unbundled_env { run(cmd) }
+              else
+                Bundler.with_clean_env { run(cmd) }
+              end
+            else
+              run(cmd)
+            end
+  unless success
+    puts "Command failed, exiting: #{cmd}"
+    exit(1)
+  end
+end
+
+def sprockets?
+  !options[:skip_sprockets]
 end
 
 apply_template!

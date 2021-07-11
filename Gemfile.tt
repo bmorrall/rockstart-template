@@ -47,5 +47,10 @@ group :development do
   gem 'web-console'<%= gemfile_requirement("web-console") %>
 end
 
+group :test do
+  # Use simplecov for code coverage reports
+  gem 'simplecov', require: false
+end
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

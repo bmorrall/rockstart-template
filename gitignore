@@ -26,6 +26,7 @@
 .byebug_history
 
 # Ignore test reports.
+/coverage
 /spec/examples.txt
 
 # Ignore master key for decrypting credentials and more.

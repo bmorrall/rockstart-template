@@ -105,7 +105,7 @@ end
 def gemfile_requirement(name)
   @original_gemfile ||= IO.read('Gemfile')
   req = @original_gemfile[/gem\s+['"]#{name}['"]\s*(,[><~= \t\d.\w'"]*)?.*$/, 1]
-  req && req.gsub("'", %(")).strip.sub(/^,\s*"/, ', "')
+  req && req.gsub("'", %(")).strip.sub(/^,\s*"/, ', "').gsub('"', "'")
 end
 
 def preexisting_git_repo?

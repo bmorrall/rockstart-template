@@ -22,6 +22,8 @@ def apply_template!
 
   template 'Gemfile.tt', force: true
 
+  apply 'Rakefile.rb'
+
   add_rspec_install
   directory 'lib'
 

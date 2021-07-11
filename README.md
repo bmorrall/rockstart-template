@@ -39,6 +39,8 @@ rails new blog
 
 #### These gems are added to the standard Rails stack
 
+* Core
+    * [high_voltage][] - for static pages
 * Configuration
     * [dotenv][] – for local configuration
 * Utilities
@@ -49,6 +51,7 @@ rails new blog
     * [shoulda][] – shortcuts for common ActiveRecord tests
 
 [dotenv]:https://github.com/bkeepers/dotenv
+[high_voltage]:https://github.com/thoughtbot/high_voltage
 [rubocop]:https://github.com/bbatsov/rubocop
 [brakeman]:https://github.com/presidentbeef/brakeman
 [bundler-audit]:https://github.com/rubysec/bundler-audit

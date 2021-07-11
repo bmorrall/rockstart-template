@@ -10,6 +10,8 @@ gem 'dotenv-rails', groups: %i[development test]
 # gem 'bcrypt'<%= gemfile_requirement('bcrypt') %>
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap'<%= gemfile_requirement('bootsnap') %>, require: false
+# Use HighVoltage for static pages
+gem 'high_voltage'<%= gemfile_requirement('high_voltage') || ", '~> 3.1'" %>
 # Use Active Storage variant
 # gem 'image_processing'<%= gemfile_requirement('image_processing') %>
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder

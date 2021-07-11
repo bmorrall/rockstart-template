@@ -25,7 +25,11 @@ def apply_template!
   apply 'Rakefile.rb'
 
   add_rspec_install
+  directory 'app'
+  directory 'config'
   directory 'lib'
+  directory 'spec'
+  route "root to: 'pages#home'"
 
   git :init unless preexisting_git_repo?
   empty_directory '.git/safe'

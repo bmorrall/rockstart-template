@@ -25,8 +25,17 @@ def apply_template!
   git :init unless preexisting_git_repo?
   empty_directory '.git/safe'
 
+  copy_file 'gitignore', '.gitignore', force: true
+
+  add_rspec_install
+
   run_with_clean_bundler_env 'bundle update'
   run_with_clean_bundler_env 'bin/rails webpacker:install'
+  create_database_and_initial_migration
+  run_with_clean_bundler_env 'bin/setup'
+
+  binstubs = %w[bundler rspec-core]
+  run_with_clean_bundler_env "bundle binstubs #{binstubs.join(' ')} --force"
 end
 
 def assert_minimum_rails_version
@@ -111,14 +120,26 @@ def run_with_clean_bundler_env(cmd)
             else
               run(cmd)
             end
-  unless success
-    puts "Command failed, exiting: #{cmd}"
-    exit(1)
-  end
+  return if success
+
+  puts "Command failed, exiting: #{cmd}"
+  exit(1)
+end
+
+def create_database_and_initial_migration
+  return if Dir['db/migrate/**/*.rb'].any?
+
+  run_with_clean_bundler_env 'bin/rails db:create'
+  run_with_clean_bundler_env 'bin/rails generate migration initial_migration'
 end
 
 def sprockets?
   !options[:skip_sprockets]
+end
+
+def add_rspec_install
+  template 'rspec', '.rspec'
+  directory 'spec'
 end
 
 apply_template!

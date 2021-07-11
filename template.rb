@@ -22,19 +22,20 @@ def apply_template!
 
   template 'Gemfile.tt', force: true
 
+  add_rspec_install
+  directory 'lib'
+
   git :init unless preexisting_git_repo?
   empty_directory '.git/safe'
 
   copy_file 'gitignore', '.gitignore', force: true
-
-  add_rspec_install
 
   run_with_clean_bundler_env 'bundle update'
   run_with_clean_bundler_env 'bin/rails webpacker:install'
   create_database_and_initial_migration
   run_with_clean_bundler_env 'bin/setup'
 
-  binstubs = %w[bundler rspec-core rubocop]
+  binstubs = %w[brakeman bundler bundler-audit rspec-core rubocop]
   run_with_clean_bundler_env "bundle binstubs #{binstubs.join(' ')} --force"
 
   template 'rubocop.yml.tt', '.rubocop.yml'

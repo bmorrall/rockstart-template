@@ -26,6 +26,7 @@
 .byebug_history
 
 # Ignore test reports.
+/brakeman-output.*
 /coverage
 /spec/examples.txt
 

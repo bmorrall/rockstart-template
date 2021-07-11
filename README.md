@@ -34,3 +34,20 @@ If you’ve installed this template as your default (using `~/.railsrc` as descr
 ```
 rails new blog
 ```
+
+## What is included?
+
+#### These gems are added to the standard Rails stack
+
+* Utilities
+    * [rubocop][] – enforces Ruby code style
+* Security
+    * [brakeman][] and [bundler-audit][] – detect security vulnerabilities
+* Testing
+    * [shoulda][] – shortcuts for common ActiveRecord tests
+
+[dotenv]:https://github.com/bkeepers/dotenv
+[rubocop]:https://github.com/bbatsov/rubocop
+[brakeman]:https://github.com/presidentbeef/brakeman
+[bundler-audit]:https://github.com/rubysec/bundler-audit
+[shoulda]:https://github.com/thoughtbot/shoulda

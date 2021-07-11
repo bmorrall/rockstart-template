@@ -34,8 +34,11 @@ def apply_template!
   create_database_and_initial_migration
   run_with_clean_bundler_env 'bin/setup'
 
-  binstubs = %w[bundler rspec-core]
+  binstubs = %w[bundler rspec-core rubocop]
   run_with_clean_bundler_env "bundle binstubs #{binstubs.join(' ')} --force"
+
+  template 'rubocop.yml.tt', '.rubocop.yml'
+  run_rubocop_autocorrections
 end
 
 def assert_minimum_rails_version
@@ -131,6 +134,10 @@ def create_database_and_initial_migration
 
   run_with_clean_bundler_env 'bin/rails db:create'
   run_with_clean_bundler_env 'bin/rails generate migration initial_migration'
+end
+
+def run_rubocop_autocorrections
+  run_with_clean_bundler_env 'bin/rubocop -A --fail-level A > /dev/null || true'
 end
 
 def sprockets?

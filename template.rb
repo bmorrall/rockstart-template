@@ -68,6 +68,8 @@ def apply_template!
   template 'rubocop.yml.tt', '.rubocop.yml'
   run_rubocop_autocorrections
 
+  install_tailwind_css
+
   add_heroku_configuration
 
   unless any_local_git_commits?
@@ -196,6 +198,22 @@ def add_devise_routes
       delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
     end
   DEVISE
+end
+
+def install_tailwind_css
+  tailwind_modules = %w[
+    postcss
+    autoprefixer
+    tailwindcss
+    @tailwindcss/forms
+    @tailwindcss/typography
+    @tailwindcss/aspect-ratio
+  ]
+  run_with_clean_bundler_env "yarn add #{tailwind_modules.join(' ')}"
+  template 'postcss.config.js'
+  append_to_file 'app/javascript/packs/application.js' do
+    "\nimport \"stylesheets/application\"\n"
+  end
 end
 
 def add_heroku_configuration

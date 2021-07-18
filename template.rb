@@ -68,6 +68,8 @@ def apply_template!
   template 'rubocop.yml.tt', '.rubocop.yml'
   run_rubocop_autocorrections
 
+  add_heroku_configuration
+
   unless any_local_git_commits?
     git checkout: '-b main'
     git add: '-A .'
@@ -194,6 +196,10 @@ def add_devise_routes
       delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
     end
   DEVISE
+end
+
+def add_heroku_configuration
+  run_with_clean_bundler_env 'bundle lock --add-platform x86_64-linux'
 end
 
 apply_template!

@@ -70,6 +70,7 @@ def apply_template!
   run_rubocop_autocorrections
 
   install_tailwind_css
+  install_stimulus_js
 
   add_heroku_configuration
 
@@ -191,6 +192,12 @@ def add_rspec_install
   directory 'spec'
 end
 
+def add_controller_routes
+  route <<~CONTROLLERS
+    resource :dashboard, only: :show
+  CONTROLLERS
+end
+
 def add_devise_routes
   route <<~DEVISE
     devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
@@ -217,10 +224,15 @@ def install_tailwind_css
   end
 end
 
-def add_controller_routes
-  route <<~CONTROLLERS
-    resource :dashboard, only: :show
-  CONTROLLERS
+def install_stimulus_js
+  stimulus_modules = %w[
+    stimulus
+    tailwindcss-stimulus-components
+  ]
+  run_with_clean_bundler_env "yarn add #{stimulus_modules.join(' ')}"
+  append_to_file 'app/javascript/packs/application.js' do
+    "\nrequire(\"controllers\")\n"
+  end
 end
 
 def add_heroku_configuration

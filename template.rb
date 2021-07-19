@@ -49,6 +49,7 @@ def apply_template!
   directory 'spec'
 
   route "root to: 'pages#home'"
+  add_controller_routes
   add_devise_routes
 
   git :init unless preexisting_git_repo?
@@ -214,6 +215,12 @@ def install_tailwind_css
   append_to_file 'app/javascript/packs/application.js' do
     "\nimport \"stylesheets/application\"\n"
   end
+end
+
+def add_controller_routes
+  route <<~CONTROLLERS
+    resource :dashboard, only: :show
+  CONTROLLERS
 end
 
 def add_heroku_configuration

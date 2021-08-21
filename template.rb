@@ -193,9 +193,7 @@ def add_rspec_install
 end
 
 def add_controller_routes
-  route <<~CONTROLLERS
-    resource :dashboard, only: :show
-  CONTROLLERS
+  route 'resource :dashboard, only: :show'
 end
 
 def add_devise_routes

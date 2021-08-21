@@ -63,9 +63,7 @@
         </div>
       </header>
 
-      <main>
-        <%%= yield %>
-      </main>
+      <%%= yield %>
     </div>
   </body>
 </html>

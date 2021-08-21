@@ -194,6 +194,7 @@ end
 
 def add_controller_routes
   route 'resource :dashboard, only: :show'
+  route 'resources :notifications, only: :index'
 end
 
 def add_devise_routes

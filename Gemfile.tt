@@ -22,6 +22,8 @@ gem 'jbuilder'<%= gemfile_requirement('jbuilder') %>
 gem 'pg'<%= gemfile_requirement('pg') %>
 # Use Puma as the app server
 gem 'puma'<%= gemfile_requirement('puma') %>
+# Use Pundit for access control
+gem 'pundit'<%= gemfile_requirement('pundit') %>
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> <%= Rails.version[/\d+\.\d+\.\d+/] %>'
 # Use Redis adapter to run Action Cable in production

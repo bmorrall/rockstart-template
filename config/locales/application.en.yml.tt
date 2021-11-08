@@ -1,0 +1,3 @@
+en:
+  application:
+    title: "<%= app_name %>"

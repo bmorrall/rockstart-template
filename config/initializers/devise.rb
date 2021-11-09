@@ -271,13 +271,27 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  config.omniauth :auth0,
-                  ENV['AUTH0_CLIENT_ID'],
-                  ENV['AUTH0_CLIENT_SECRET'],
-                  ENV['AUTH0_DOMAIN'],
-                  authorize_params: {
-                    scope: 'openid profile'
-                  }
+  oauth_providers = []
+
+  if ENV['AUTH0_CLIENT_ID'].present?
+    config.omniauth :auth0,
+                    ENV.fetch('AUTH0_CLIENT_ID'),
+                    ENV.fetch('AUTH0_CLIENT_SECRET'),
+                    ENV.fetch('AUTH0_DOMAIN'),
+                    authorize_params: {
+                      scope: 'openid profile'
+                    }
+    oauth_providers << :auth0
+  end
+
+  if Rails.env.development?
+    config.omniauth :developer,
+                    fields: %i[username name],
+                    uid_field: :username
+    oauth_providers << :developer
+  end
+
+  Rails.application.config.oauth_providers = oauth_providers.freeze
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

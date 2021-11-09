@@ -2,14 +2,20 @@
 
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-    skip_before_action :verify_authenticity_token, only: :auth0
+    OAUTH_PROVIDERS = Rails.application.config.oauth_providers
 
-    def auth0
-      # You need to implement the method below in your model (e.g. app/models/user.rb)
-      @user = User.from_omniauth(request.env['omniauth.auth'])
+    skip_before_action :verify_authenticity_token, only: OAUTH_PROVIDERS
 
-      sign_in_and_redirect @user, event: :authentication # this will throw if @user is not activated
-      set_flash_message(:notice, :success, kind: 'Auth0') if is_navigational_format?
+    OAUTH_PROVIDERS.each do |oauth_provider|
+      define_method oauth_provider do
+        # You need to implement the method below in your model (e.g. app/models/user.rb)
+        @user = User.from_omniauth(request.env['omniauth.auth'])
+
+        sign_in_and_redirect @user, event: :authentication
+
+        oauth_provider_name = OmniAuth::Utils.camelize(oauth_provider.to_s)
+        set_flash_message(:notice, :success, kind: oauth_provider_name) if is_navigational_format?
+      end
     end
 
     def failure

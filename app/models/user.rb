@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  devise :trackable, :omniauthable, omniauth_providers: %i[auth0]
+  devise :trackable, :omniauthable, omniauth_providers: Rails.application.config.oauth_providers
 
   def self.from_omniauth(auth)
     user_from_omniauth = find_or_initialize_by(provider: auth.provider, uid: auth.uid)

@@ -48,17 +48,12 @@ def apply_template!
   directory 'lib'
   directory 'spec'
 
-  route "root to: 'pages#home'"
-  add_controller_routes
-  add_devise_routes
-
   git :init unless preexisting_git_repo?
   empty_directory '.git/safe'
 
   copy_file 'gitignore', '.gitignore', force: true
 
   run_with_clean_bundler_env 'bundle update'
-  run_with_clean_bundler_env 'bin/rails webpacker:install'
   create_database
   migration_template 'db/migrate/devise_create_users.rb', 'db/migrate/devise_create_users.rb'
   run_with_clean_bundler_env 'bin/setup'
@@ -68,9 +63,6 @@ def apply_template!
 
   template 'rubocop.yml.tt', '.rubocop.yml'
   run_rubocop_autocorrections
-
-  install_tailwind_css
-  install_stimulus_js
 
   add_heroku_configuration
 
@@ -190,48 +182,6 @@ end
 def add_rspec_install
   template 'rspec', '.rspec'
   directory 'spec'
-end
-
-def add_controller_routes
-  route 'resource :dashboard, only: :show'
-  route 'resources :notifications, only: :index'
-end
-
-def add_devise_routes
-  route <<~DEVISE
-    devise_for :users, controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
-    devise_scope :user do
-      get 'sign_in', :to => 'devise/sessions#new', :as => :new_user_session
-      delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
-    end
-  DEVISE
-end
-
-def install_tailwind_css
-  tailwind_modules = %w[
-    postcss
-    autoprefixer
-    tailwindcss
-    @tailwindcss/forms
-    @tailwindcss/typography
-    @tailwindcss/aspect-ratio
-  ]
-  run_with_clean_bundler_env "yarn add #{tailwind_modules.join(' ')}"
-  template 'postcss.config.js'
-  append_to_file 'app/javascript/packs/application.js' do
-    "\nimport \"stylesheets/application\"\n"
-  end
-end
-
-def install_stimulus_js
-  stimulus_modules = %w[
-    stimulus
-    tailwindcss-stimulus-components
-  ]
-  run_with_clean_bundler_env "yarn add #{stimulus_modules.join(' ')}"
-  append_to_file 'app/javascript/packs/application.js' do
-    "\nrequire(\"controllers\")\n"
-  end
 end
 
 def add_heroku_configuration

@@ -35,6 +35,12 @@ If you’ve installed this template as your default (using `~/.railsrc` as descr
 rails new blog
 ```
 
+### Futher Setup
+
+While this code sets up a basic rails appliction, it does not provide any futher UI. Look into futher templates for these features:
+
+- https://github.com/bmorrall/rockstart-tailwindcss-webapp
+
 ## What is included?
 
 #### These gems are added to the standard Rails stack
